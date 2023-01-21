@@ -23,12 +23,13 @@ Start with a PDF that contains for instance highlighted text and user-comments:
 ![pdf with comments after h2a](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/pdf%20with%20comments%20before%20h2a.png)
 
 ### GUI
-Start the GUI by calling "python h2a_GUI.py" and process the pdfs by drag&drop.
+1. Open a terminal, change the directory "cd" to the folder with the h2a code (download the entire repo), and start the GUI by calling "python h2a_GUI.py":
+![Windows - start h2a_GUI from the terminal](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20start%20h2a_GUI%20from%20the%20terminal.png)
 
-Drag your PDF file into the "exe" box in the bottom right:
+2. Drag your PDF file into the "exe" box in the bottom right:
 ![Windows - h2a_GUI - drag&drop1](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20h2a_GUI%20-%20drag%26drop1.png)
 
-Drop it, which triggers the h2a-algorithm. Once the PDF is processed, the "exe" box turns green and information is shown in the "info" box at the top:
+3. Drop it, which triggers the h2a-algorithm. Once the PDF is processed, the "exe" box turns green and information is shown in the "info" box at the top:
 ![Windows - h2a_GUI - drag&drop2 - exe](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20h2a_GUI%20-%20drag%26drop2%20-%20exe.png)
 
 Afterwards the PDF contains annotations with the extracted highlighted text and still contains all your user comments:
