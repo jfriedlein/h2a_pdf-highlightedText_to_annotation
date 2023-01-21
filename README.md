@@ -50,6 +50,7 @@ output_mode, update procedure, autoMarker
 - H2A protocol: h2a creates a protocal that is entered in the pdf by a note annotation on the first page. This protocol stores all executions of h2a and enables infinite runs of h2a on the same file without doing any harm.
 - update procedures: modifying the content of the annotation after extraction is easily possible. Choosing the update procedure "update_new" or "update_all" will automatically detect such manually changed annotations and won't alter them. ("update_all" reprocesses all annotations)
 - comment text: If the content of the highlight annotation already contains some text, the extracted highlight text is appended to existing text as "[extracted highlight text] >a> [already existing comment text]". Here " >a> " can be specified by the user as the "autoMarker".
+- dynamic: You can change your own annotations freely. If you change some of the automatically extracted text in the content field of the annotation, h2a detects such custom changes automatically (based on the annotation's last modified time) and protects the annotation when using the update procedure "update_auto". Never loose any data and keep working with the PDF.
 
 ## todo
 - hyphen or no hyphen
