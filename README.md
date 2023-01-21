@@ -26,7 +26,7 @@ Start with a PDF that contains for instance highlighted text and user-comments:
 1. Open a terminal, change the directory "cd" to the folder with the h2a code (download the entire repo), and start the GUI by calling "python h2a_GUI.py":
 ![Windows - start h2a_GUI from the terminal](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20start%20h2a_GUI%20from%20the%20terminal.png)
 
-2. Drag your PDF file into the "exe" box in the bottom right:
+2. Drag your PDF file into the "exe" box in the bottom right (note: PDF cannot be open in the very possessive Adobe Reader during h2a processing):
 ![Windows - h2a_GUI - drag&drop1](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20h2a_GUI%20-%20drag%26drop1.png)
 
 3. Drop it, which triggers the h2a-algorithm. Once the PDF is processed, the "exe" box turns green and information is shown in the "info" box at the top:
