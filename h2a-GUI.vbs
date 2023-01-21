@@ -1,1 +1,2 @@
-CreateObject("Wscript.Shell").Run "C:\Users\Johan\Desktop\h2a_pdf-highlightedText_to_annotation-main\h2a-GUI.bat", 0, True
+'Run the h2a-GUI.bat file without opening the command terminal
+CreateObject("Wscript.Shell").Run "h2a-GUI.bat", 0, True
