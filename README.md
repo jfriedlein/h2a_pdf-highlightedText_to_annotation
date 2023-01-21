@@ -4,18 +4,35 @@ Python tool to extract highlighted text from a pdf file and write this text into
 ## What it does
 This is a Python tool that reads a pdf page-by-page extracting the highlighted text and saves the highlighted words into the content field of the highlight annotation. This is ideally suited for Docear to prepare pdfs. Alternatively, he output mode "h2a_txt" enables to store the extracted highlight text to a separate txt file.
 
-## Installation
-for h2a: 
-pip install fitz, ...
+![h2a_scheme](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/h2a_scheme.png)
 
-@todo Collect all necessary packages
+## Installation
+Compatible with Linux and Windows ( tested for Windows with python 3.11.1 custom installation based on ["Install Python under Windows"](https://www.digitalocean.com/community/tutorials/install-python-windows-10) already including tkinter)
+
+@todo Check all necessary packages also for Linux
+
+for h2a-algorithm: 
+- pip install pymupdf (no need to directly install fitz, which may cause some problems)
 
 for GUI:
-pip install tkinter, ...
+- pip install tkinter
+- pip install tkinterdnd2
 
 ## Usability
+Start with a PDF that contains for instance highlighted text and user-comments:
+![pdf with comments after h2a](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/pdf%20with%20comments%20before%20h2a.png)
+
 ### GUI
 Start the GUI by calling "python h2a_GUI.py" and process the pdfs by drag&drop.
+
+Drag your PDF file into the "exe" box in the bottom right:
+![Windows - h2a_GUI - drag&drop1](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20h2a_GUI%20-%20drag%26drop1.png)
+
+Drop it, which triggers the h2a-algorithm. Once the PDF is processed, the "exe" box turns green and information is shown in the "info" box at the top:
+![Windows - h2a_GUI - drag&drop2 - exe](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20h2a_GUI%20-%20drag%26drop2%20-%20exe.png)
+
+Afterwards the PDF contains annotations with the extracted highlighted text and still contains all your user comments:
+![pdf with comments after h2a](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/pdf%20with%20comments%20after%20h2a.png)
 
 ### command line
 Process a pdf from the command line via the h2a_commander
