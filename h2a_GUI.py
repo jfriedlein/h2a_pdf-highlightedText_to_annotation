@@ -134,20 +134,28 @@ def output_info( path_file ):
 # Create main window
 window = tkinterdnd2.Tk()
 window.title('h2a - pdf highlighted text to annotation')
+window.maxsize(900,  600)  # width x height
+
+top_frame = tk.Frame( window, width=900, height=300 )
+top_frame.grid( row=0, column=0 )
 
 # Create info list box
-lb_info = tk.Listbox(window, width=110, height=14)
+lb_info = tk.Listbox(top_frame, width=110, height=14)
 lb_info.drop_target_register(tkinterdnd2.DND_FILES)
 lb_info.insert(0, "Output file info (drag&drop PDF file here)")
 lb_info.dnd_bind("<<Drop>>", drop_info )
-lb_info.pack(padx=2,pady=2,fill=tk.BOTH,expand=True)
+#lb_info.pack(padx=2,pady=2,fill=tk.BOTH,expand=True)
+lb_info.grid( row=0, column=0, padx=2, pady=2 )
+
+frame_into_options = tk.Frame( window, width=900, height=50 )
+frame_into_options.grid( row=1, column=0 )
 
 # button to run h2a on file in info box
-tk.Label(text='h2a:').place(x=60, y=180)  
+tk.Label(frame_into_options, text='h2a:').grid( row=0, column=0, sticky='w' )#place(x=60, y=180)  
 def h2a_on_info():
     exe_h2a( button_info_exe['text'] )
 button_info_exe=tk.Button(
-   window, 
+   frame_into_options, 
    text="h2a on file in info box",
    width=80,
    anchor="e",
@@ -155,19 +163,21 @@ button_info_exe=tk.Button(
 )
 # The button is initially off and only activated after drag&drop of a proper pdf file
 button_info_exe["state"] = "disabled"
-button_info_exe.pack()
+#button_info_exe.pack()
+button_info_exe.grid(row=0, column=1, sticky='w')
 
 # Create button to open pdf file in info box with default pdf application
 def open_pdf():
     os.system('xdg-open "'+button_info_exe['text']+'"')
 button_open_info_pdf=tk.Button(
-   window, 
+   frame_into_options, 
    text="PDF",
-   width=1,
+   width=3,
    command=open_pdf
 )
 button_open_info_pdf["state"] = "disabled"
-button_open_info_pdf.place(x=3,y=176)
+#button_open_info_pdf.place(x=3,y=176)
+button_open_info_pdf.grid( row=0, column=2, sticky='e')
 ##740
 
 # Create button to unddo h2a on pdf file in info box
@@ -176,17 +186,24 @@ def unddo_h2a():
     h2a_unddo( path_file )
     output_info( path_file )
 button_unddo_info_pdf=tk.Button(
-   window, 
+   frame_into_options, 
    text="Unddo",
-   width=3,
+   width=5,
    command=unddo_h2a
 )
 button_unddo_info_pdf["state"] = "disabled"
-button_unddo_info_pdf.place(x=720,y=176)
+#button_unddo_info_pdf.place(x=720,y=176)
+button_unddo_info_pdf.grid( row=0, column=3, sticky='e')
+
+frame_bottom = tk.Frame(window, width=900, height=50 )
+frame_bottom.grid(row=2, column=0)
+
+frame_settings = tk.Frame( frame_bottom, width=450, height=50 )
+frame_settings.grid( row=0, column=0 )
 
 # Alter h2a settings
 # Output mode
-tk.Label(text='output mode').place(x=10, y=220)
+tk.Label(frame_settings, text='output mode').grid(row=0, column=0) #place(x=10, y=220)
 # Create Dropdown menu
 output_mode_options = [
     "h2a",
@@ -195,12 +212,13 @@ output_mode_options = [
 ]
 output_mode_clicked = tk.StringVar()
 output_mode_clicked.set( output_mode_options[0] )
-output_mode = tk.OptionMenu( window , output_mode_clicked, *output_mode_options )
+output_mode = tk.OptionMenu( frame_settings, output_mode_clicked, *output_mode_options )
 output_mode.config(width = 8)
-output_mode.pack(side=tk.LEFT)
+output_mode.grid(row=1, column=0 )
+#output_mode.pack(side=tk.LEFT)
 
 # update procedure
-tk.Label(text='update proc').place(x=120, y=220)
+tk.Label(frame_settings, text='update proc').grid(row=0, column=1) #place(x=120, y=220)
 # Create Dropdown menu
 update_proc_options = [
     "update_new",
@@ -209,20 +227,22 @@ update_proc_options = [
 ]
 update_proc_clicked = tk.StringVar()
 update_proc_clicked.set( update_proc_options[0] )
-update_proc = tk.OptionMenu( window , update_proc_clicked, *update_proc_options )
+update_proc = tk.OptionMenu( frame_settings, update_proc_clicked, *update_proc_options )
 update_proc.config(width = 10)
-update_proc.pack(side=tk.LEFT)
+update_proc.grid(row=1, column=1 )
+#update_proc.pack(side=tk.LEFT)
 
 # auto marker
-tk.Label(text='auto marker').place(x=220, y=220)
+tk.Label(frame_settings, text='auto marker').grid(row=0, column=2) #place(x=220, y=220)
 # Create text box with custom input
 text_box_marker = tk.Text(
-    window,
+    frame_settings,
     height=1,
     width=12
 )
 text_box_marker.config(state='normal')
-text_box_marker.pack(side=tk.LEFT)
+text_box_marker.grid(row=1, column=2)
+#text_box_marker.pack(side=tk.LEFT)
 
 # Set/reset the values/settings of the drop down menus and text box
 def reset_to_default_settings():
@@ -236,32 +256,44 @@ reset_to_default_settings()
 
 # Create button to manually reset the settings
 button_reset = tk.Button(
-   window, 
+   frame_settings, 
    text="default settings", 
    command=reset_to_default_settings
 )
-button_reset.place(x=80, y=265)
+button_reset.grid(row=2, column=1)
+#button_reset.place(x=80, y=265)
+
+frame_exe = tk.Frame( frame_bottom, width=450, height=50 )
+frame_exe.grid( row=0, column=1 )
+
+frame_exe_box = tk.Frame( frame_exe, width=450, height=50 )
+frame_exe_box.grid(row=0, column=0)
 
 # Create list box for h2a execution
-lb_exe = tk.Listbox(window, width=64, height=5)
+lb_exe = tk.Listbox(frame_exe_box, width=60, height=5)
 lb_exe.drop_target_register(tkinterdnd2.DND_FILES)
 lb_exe.insert(0, "Execute h2a (drag&drop PDF file here)")
 lb_exe.dnd_bind("<<Drop>>", dropexe)
-lb_exe.pack(padx=2,pady=2,fill=tk.BOTH,expand=True)
+lb_exe.grid(row=0, column=0, padx=2, pady=2)
+#lb_exe.pack(padx=2,pady=2,fill=tk.BOTH,expand=True)
+
+frame_h2a_on_exe = tk.Frame( frame_exe, width=450, height=50 )
+frame_h2a_on_exe.grid(row=1, column=0)
 
 # button to run h2a on file in exe box
-tk.Label(text='h2a:').place(x=275, y=275)
+tk.Label(frame_h2a_on_exe, text='h2a:').grid(row=0, column=0) #place(x=275, y=275)
 def h2a_on_exe():
     exe_h2a( button_exe['text'] )
 button_exe=tk.Button(
-   window, 
+   frame_h2a_on_exe, 
    text="h2a on file in exe box",
-   width=64,
+   width=48,
    anchor="e",
    command=h2a_on_exe
 )
 # The button is initially off and only activated after drag&drop of a proper pdf file
 button_exe["state"] = "disabled"
-button_exe.pack()
+button_exe.grid(row=0, column=1)
+#button_exe.pack()
 
 window.mainloop()
