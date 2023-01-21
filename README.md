@@ -18,10 +18,14 @@ for GUI:
 - pip install tkinter
 - pip install tkinterdnd2
 
-## Setup
-download the entire repo, place vbs script e.g. on the Desktop to quickly start the GUI
-
-@todo extent setup
+## Features
+- text sorting: annotations that contain multiple rectangle of highlighted text are sorted according to the reading flow
+- highlighted text detection: highlighted text in pdf files does not store the actual text, but the coordinates of the coloured rectangles. h2a detects which words are highlighted based on the area that a word of the pdf lies within the coloured rectangle and by checking that the word lies on the same line as the rectangle
+- H2A protocol: h2a creates a protocal that is entered in the pdf by a note annotation on the first page. This protocol stores all executions of h2a and enables infinite runs of h2a on the same file without doing any harm.
+- update procedures: modifying the content of the annotation after extraction is easily possible. Choosing the update procedure "update_new" or "update_all" will automatically detect such manually changed annotations and won't alter them. ("update_all" reprocesses all annotations)
+- comment text: If the content of the highlight annotation already contains some text, the extracted highlight text is appended to existing text as "[extracted highlight text] >a> [already existing comment text]". Here " >a> " can be specified by the user as the "autoMarker".
+- dynamic: You can change your own annotations freely. If you change some of the automatically extracted text in the content field of the annotation, h2a detects such custom changes automatically (based on the annotation's last modified time) and protects the annotation when using the update procedure "update_auto". Never loose any data and keep working with the PDF.
+- fast: Processing pdf with less than 100 pages takes a fraction of a second. Processing a book with 790 pages and 55 annotations takes around 1.4 seconds. If you look at the code, you might think all this looping over each word on the page takes forever, nope it is very very fast.
 
 ## Usability
 Start with a PDF that contains for instance highlighted text and user-comments:
@@ -54,14 +58,15 @@ output_mode, update procedure, autoMarker
 
 @todo Add documentation on the settings
 
-## Features
-- text sorting: annotations that contain multiple rectangle of highlighted text are sorted according to the reading flow
-- highlighted text detection: highlighted text in pdf files does not store the actual text, but the coordinates of the coloured rectangles. h2a detects which words are highlighted based on the area that a word of the pdf lies within the coloured rectangle and by checking that the word lies on the same line as the rectangle
-- H2A protocol: h2a creates a protocal that is entered in the pdf by a note annotation on the first page. This protocol stores all executions of h2a and enables infinite runs of h2a on the same file without doing any harm.
-- update procedures: modifying the content of the annotation after extraction is easily possible. Choosing the update procedure "update_new" or "update_all" will automatically detect such manually changed annotations and won't alter them. ("update_all" reprocesses all annotations)
-- comment text: If the content of the highlight annotation already contains some text, the extracted highlight text is appended to existing text as "[extracted highlight text] >a> [already existing comment text]". Here " >a> " can be specified by the user as the "autoMarker".
-- dynamic: You can change your own annotations freely. If you change some of the automatically extracted text in the content field of the annotation, h2a detects such custom changes automatically (based on the annotation's last modified time) and protects the annotation when using the update procedure "update_auto". Never loose any data and keep working with the PDF.
-- fast: Processing pdf with less than 100 pages takes a fraction of a second. Processing a book with 790 pages and 55 annotations takes around 1.4 seconds. If you look at the code, you might think all this looping over each word on the page takes forever, nope it is very very fast.
+## Setup using vbs script
+1. Download the entire repo
+2. Place the vbs script "h2a-GUI.vbs" e.g. on your desktop o quickly start the GUI
+3. Change the path inside the vbs script to point to the h2a-folder
+4. Change the path inside the batch script to point to the h2a-folder (vbs calls this batch script)
+5. For external vbs script often security warnings occurs (go to the settings of the vbs script and click on "allow"), now that you have seen the unspectacular content of both files.
+6. Start the GUI by double clicking the vbs script.
+
+@todo extent setup
 
 ## todo
 - hyphen or no hyphen
