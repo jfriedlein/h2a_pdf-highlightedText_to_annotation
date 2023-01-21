@@ -44,6 +44,8 @@ Create a python script that e.g. executes h2a on all pdfs in a folder.
 ## Settings
 output_mode, update procedure, autoMarker
 
+@todo Add documentation on the settings
+
 ## Features
 - text sorting: annotations that contain multiple rectangle of highlighted text are sorted according to the reading flow
 - highlighted text detection: highlighted text in pdf files does not store the actual text, but the coordinates of the coloured rectangles. h2a detects which words are highlighted based on the area that a word of the pdf lies within the coloured rectangle and by checking that the word lies on the same line as the rectangle
@@ -51,6 +53,7 @@ output_mode, update procedure, autoMarker
 - update procedures: modifying the content of the annotation after extraction is easily possible. Choosing the update procedure "update_new" or "update_all" will automatically detect such manually changed annotations and won't alter them. ("update_all" reprocesses all annotations)
 - comment text: If the content of the highlight annotation already contains some text, the extracted highlight text is appended to existing text as "[extracted highlight text] >a> [already existing comment text]". Here " >a> " can be specified by the user as the "autoMarker".
 - dynamic: You can change your own annotations freely. If you change some of the automatically extracted text in the content field of the annotation, h2a detects such custom changes automatically (based on the annotation's last modified time) and protects the annotation when using the update procedure "update_auto". Never loose any data and keep working with the PDF.
+- fast: Processing pdf with less than 100 pages takes a fraction of a second. Processing a book with 790 pages and 55 annotations takes around 1.4 seconds. If you look at the code, you might think all this looping over each word on the page takes forever, nope it is very very fast.
 
 ## todo
 - hyphen or no hyphen
