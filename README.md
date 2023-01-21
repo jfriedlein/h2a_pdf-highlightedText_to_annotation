@@ -60,11 +60,8 @@ output_mode, update procedure, autoMarker
 
 ## Setup using vbs script
 1. Download the entire repo
-2. Place the vbs script "h2a-GUI.vbs" e.g. on your desktop o quickly start the GUI
-3. Change the path inside the vbs script to point to the h2a-folder
-4. Change the path inside the batch script to point to the h2a-folder (vbs calls this batch script)
-5. For external vbs script often security warnings occurs (go to the settings of the vbs script and click on "allow"), now that you have seen the unspectacular content of both files.
-6. Start the GUI by double clicking the vbs script.
+2. Create a desktop shortcut from the "h2a-GUI.vbs" script
+3. Start the GUI by double clicking the desktop shortcut.
 
 @todo extent setup
 
