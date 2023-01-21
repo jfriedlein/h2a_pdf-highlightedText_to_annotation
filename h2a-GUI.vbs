@@ -1,0 +1,1 @@
+CreateObject("Wscript.Shell").Run "C:\Users\Johan\Desktop\h2a_pdf-highlightedText_to_annotation-main\h2a-GUI.bat", 0, True
