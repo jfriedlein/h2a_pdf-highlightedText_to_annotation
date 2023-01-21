@@ -23,7 +23,7 @@ Start with a PDF that contains for instance highlighted text and user-comments:
 ![pdf with comments after h2a](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/pdf%20with%20comments%20before%20h2a.png)
 
 ### GUI
-1. Open a terminal, change the directory "cd" to the folder with the h2a code (download the entire repo), and start the GUI by calling "python h2a_GUI.py":
+1. Start h2a GUI, either via the vbs script (opens GUI directly), or via the batch script (opens command terminal, which shows possible error messages) or start the GUI by calling "python h2a_GUI.py" after open a terminal and changing the directory "cd" to the folder with the h2a code (download the entire repo):
 ![Windows - start h2a_GUI from the terminal](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/Windows%20-%20start%20h2a_GUI%20from%20the%20terminal.png)
 
 2. Drag your PDF file into the "exe" box in the bottom right (note: PDF cannot be open in the very possessive Adobe Reader during h2a processing):
