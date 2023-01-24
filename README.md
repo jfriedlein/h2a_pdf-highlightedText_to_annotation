@@ -2,7 +2,7 @@
 Python tool to extract highlighted text from a pdf file and write this text into content of each annotation
 
 ## What it does
-This is a Python tool that reads a pdf page-by-page extracting the highlighted text and saves the highlighted words into the content field of the highlight annotation. This is ideally suited for Docear to prepare pdfs. Alternatively, he output mode "h2a_txt" enables to store the extracted highlight text to a separate txt file.
+This is a Python tool that reads a pdf page-by-page extracting the highlighted text and saves the highlighted words into the content field of the highlight annotation. This is ideally suited for Docear to prepare pdfs. Alternatively, the output mode "h2a_txt" enables to store the extracted highlight text to a separate txt file.
 
 ![h2a_scheme](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/h2a_scheme.png)
 
@@ -13,7 +13,7 @@ executables available for Windows and Linux (see "Releases"), no Python installa
 Compatible with Linux and Windows (tested for Windows with python 3.11.1 custom installation based on ["Install Python under Windows"](https://www.digitalocean.com/community/tutorials/install-python-windows-10) already including tkinter)
 To make sure you got all packages installed, I recommend starting the python file from the terminal, then you will see error messages.
 
-@todo Check all necessary packages also for Linux
+@todo double check all necessary packages also for Linux
 
 for h2a-algorithm: 
 - pip install pymupdf (no need to directly install fitz, which may cause some problems)
@@ -37,8 +37,8 @@ Start with a PDF that contains for instance highlighted text and user-comments:
 ![pdf with comments after h2a](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/pdf%20with%20comments%20before%20h2a.png)
 
 ### GUI
-1. Start h2a GUI from the python script h2a_GUI.py. Options:
-- run executables available for Windows and Linux (see "Releases", no Python installation or packages required, but currently slow on startup)
+1. Start h2a GUI (python script h2a_GUI.py). Options:
+- run executable available for Windows and Linux (see "Releases", no Python installation or packages required, but currently slow on startup)
 - run vbs script (opens GUI directly)
 - run batch script (opens command terminal, which shows possible error messages)
 - open a terminal, change the directory "cd" to the folder with the h2a code, and start the GUI with "python h2a_GUI.py":
