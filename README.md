@@ -7,12 +7,17 @@ This is a Python tool that reads a pdf page-by-page extracting the highlighted t
 ![h2a_scheme](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/h2a_scheme.png)
 
 ## Installation
-Compatible with Linux and Windows ( tested for Windows with python 3.11.1 custom installation based on ["Install Python under Windows"](https://www.digitalocean.com/community/tutorials/install-python-windows-10) already including tkinter)
+### Using executables
+executables available for Windows and Linux (see "Releases"), no Python installation or packages required, but currently slow on startup)
+### Using Python
+Compatible with Linux and Windows (tested for Windows with python 3.11.1 custom installation based on ["Install Python under Windows"](https://www.digitalocean.com/community/tutorials/install-python-windows-10) already including tkinter)
+To make sure you got all packages installed, I recommend starting the python file from the terminal, then you will see error messages.
 
 @todo Check all necessary packages also for Linux
 
 for h2a-algorithm: 
 - pip install pymupdf (no need to directly install fitz, which may cause some problems)
+- pip install pytz (for proper times and time zones)
 
 for GUI:
 - pip install tkinter
@@ -33,6 +38,7 @@ Start with a PDF that contains for instance highlighted text and user-comments:
 
 ### GUI
 1. Start h2a GUI from the python script h2a_GUI.py. Options:
+- run executables available for Windows and Linux (see "Releases", no Python installation or packages required, but currently slow on startup)
 - run vbs script (opens GUI directly)
 - run batch script (opens command terminal, which shows possible error messages)
 - open a terminal, change the directory "cd" to the folder with the h2a code, and start the GUI with "python h2a_GUI.py":
