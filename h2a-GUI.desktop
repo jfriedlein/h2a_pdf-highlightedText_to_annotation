@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Terminal=false
+Name=h2a-GUI
+Icon=utilities-terminal
+Path=/path to the folder (blank space can be used directly)/h2a_pdf-highlightedText_to_annotation
+Exec=python3 ./h2a_GUI.py
+Categories=Application;
