@@ -1,4 +1,4 @@
-from  is_on_same_line import is_on_same_line
+from h2a_functions.is_on_same_line import is_on_same_line
 
 def sort_rectangles ( list_of_rectangles ):
     # Sort the rectangles top to bottom
