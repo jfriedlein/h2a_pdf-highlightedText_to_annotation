@@ -1,0 +1,14 @@
+Open auto-py-to-exe if multiple python versions are installed: [https://pypi.org/project/auto-py-to-exe/]
+python -m auto_py_to_exe
+
+
+pyinstaller settings for building h2a_GUI: [https://stackoverflow.com/questions/68955373/pyinstaller-tclerror-cant-find-package-tkdnd-how-can-i-fix-this-error]
+Linux
+pyinstaller --noconfirm --onefile --windowed --name "h2a-GUI" --add-data "~/.local/lib/python3.8/site-packages/tkinterdnd2:tkinterdnd2"  "path-to-h2a/h2a_GUI.py"
+
+Windows
+pyinstaller --noconfirm --onefile --windowed --add-data "~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\site-packages\tkinterdnd2;tkinterdnd2"  "path-to-h2a/h2a_GUI.py"
+
+
+pyinstaller settings for building h2aFreeplane_caller and h2a_update_from_Freeplane.
+using auto-py-to-exe with all default settings
