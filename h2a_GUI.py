@@ -208,7 +208,8 @@ tk.Label(frame_settings, text='output mode').grid(row=0, column=0) #place(x=10, 
 output_mode_options = [
     "h2a",
     "h2a_annot",
-    "h2a_txt"
+    "h2a_txt",
+    "h2a_freeplane"
 ]
 output_mode_clicked = tk.StringVar()
 output_mode_clicked.set( output_mode_options[0] )
