@@ -34,7 +34,7 @@ def process_H2A_protocol( annot_counter, time_current, time_processing, first_pa
     
             break # Leave the loop after the protocol has been found
     
-    # Create new H2A-protocol, if no old protocol exists
+    # Create new H2A-protocol, if no protocol already exists
     if ( protocol_found==False ):
         # create protocol
         protocol_content =  'H2A-protocol:\n' +\
