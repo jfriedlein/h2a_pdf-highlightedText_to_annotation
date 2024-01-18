@@ -1,6 +1,6 @@
 # Import "re" for splitting strings with multiple delimiters [https://datagy.io/python-split-string-multiple-delimiters/]
 import re
-from get_datetime_from_pdftime import get_datetime_from_pdftime
+from h2a_functions.get_datetime_from_pdftime import get_datetime_from_pdftime
 
 def extract_comment_text( annot, H2A_protocol, title_suffix ):
     annot_text = annot.info['content']
