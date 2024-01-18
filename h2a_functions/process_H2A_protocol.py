@@ -30,9 +30,9 @@ def process_H2A_protocol( annot_counter, time_current, time_processing, first_pa
             protocol_content_new.append( protocol_content_old[5]+'-'+'; ' )
             
             # update protocol annnotation text
-            annot.set_info( content="\n".join(protocol_content_new) )
+            annot.set_info( content="\n".join(protocol_content_new), modDate=time_current )
     
-            break # Leave the loop after the protocol was found
+            break # Leave the loop after the protocol has been found
     
     # Create new H2A-protocol, if no old protocol exists
     if ( protocol_found==False ):
@@ -43,4 +43,6 @@ def process_H2A_protocol( annot_counter, time_current, time_processing, first_pa
                             '- number of processed annot: '+annot_counter_str+'; \n' +\
                             '- processing time (s): '+time_processing_str+'; \n' +\
                             '- n_errors (manual): -; '
-        first_page.add_text_annot( text=protocol_content, point=(10,10) )
+        annot = first_page.add_text_annot( text=protocol_content, point=(10,10) )
+        annot.set_info( creationDate=time_current, modDate=time_current )
+
