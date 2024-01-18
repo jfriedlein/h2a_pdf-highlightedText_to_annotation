@@ -6,13 +6,17 @@ try:
 except:
     pass
 
+import os
+import fitz
+
 import sys
-sys.path.append('./h2a_functions')
-from h2a_highlightedText_to_annotation import h2a_highlightedText_to_annotation
+from h2a_functions.h2a_highlightedText_to_annotation import h2a_highlightedText_to_annotation
 
 ## USER-INPUT
 # Enter the filename of the pdf without the file extension
-input_filename = "Bruenig" #"test pdfs/Miehe"
+# @todo Do we need to remove the file extension for h2a-Freeplane?
+#input_filename = sys.argv[1].replace("%20"," ")
+input_filename = "test-pdfs/test.pdf"
 # Choose the update procedure:
 # - 'update_all': overwrite extracted text if '>a>' or '>p>' or none/new, also removes 'p' marker
 # - 'update_auto': do not touch 'p', only modify 'a' and none/new
@@ -29,5 +33,4 @@ output_mode = 'h2a'
 # or none autoMarker=''
 autoMarker = ' >a> '
 
-#h2a_highlightedText_to_annotation ( input_filename, output_mode, update_procedure, autoMarker )
-h2a_highlightedText_to_annotation ( input_filename )
+h2a_highlightedText_to_annotation ( input_filename, output_mode, update_procedure, autoMarker )
