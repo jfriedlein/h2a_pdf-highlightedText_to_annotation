@@ -50,7 +50,7 @@ from h2a_functions.get_datetime_from_pdftime import get_datetime_from_pdftime
 # alternative for instance "[highlighted text]: [existing text]" using autoMarker=': '
 # or none autoMarker=''
 
-def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_procedure='update_new', autoMarker=' >a> ', tmp_directory='./h2a_pdf-output.tmp' ):
+def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_procedure='update_new', autoMarker=' >a> ', tmp_pathFile='./h2a_pdf-output.tmp' ):
     
     ## CODE
     # h2a-version
@@ -69,6 +69,9 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     
     # Get name of pdf (head of path)
     pdf_name = os.path.split(input_file)[1]
+    
+    # For the directory to the h2a-logfile extract the directory from the path to the h2a-Freeplane tmp file
+    path_to_tmp_directory = os.path.dirname(tmp_pathFile)
     
     # Determine the current time and format it as times are formatted in PDFs
     # @note "time_current" is used for all processed annotations and kept constant during the entire execution of this function
@@ -92,7 +95,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     if ( output_mode == 'h2a_txt' ):
         f = open(input_filename+'_annot.txt', 'w')
     elif ( output_mode == 'h2a_freeplane' ):
-        f = open(tmp_directory, 'w')#'/home/johannes/Downloads/h2a_pdf-highlightedText_to_annotation-main_V231228/h2a_pdf-output.tmp', 'w')
+        f = open(tmp_pathFile, 'w')
         
     # Loop over each page
     # Count the number of processed annotations
@@ -277,4 +280,4 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     
 
     ## Update h2a-logfile
-    update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing )    
+    update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing, path_to_tmp_directory )    
