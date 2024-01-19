@@ -2,8 +2,8 @@
 import os
 
 ## Update h2a-logfile
-def update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing ):
-    logfile_name = 'h2a-logfile.txt'
+def update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing, path_to_tmp_directory ):
+    logfile_name = path_to_tmp_directory + os.sep + 'h2a-logfile.txt'
     # Check whether logfile already exists, if not then create it
     if not os.path.exists(logfile_name):
         with open(logfile_name, 'a') as logfile:
