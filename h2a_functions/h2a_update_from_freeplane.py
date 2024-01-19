@@ -12,7 +12,7 @@ import os
 import sys
 from h2a_functions.update_h2a_logfile import update_h2a_logfile
 
-def h2a_update_from_freeplane ( path_file="./h2a_freeplane-changes.tmp" ):
+def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
     
     ## CODE
     # h2a-version
@@ -23,12 +23,15 @@ def h2a_update_from_freeplane ( path_file="./h2a_freeplane-changes.tmp" ):
     ES = ' ;x; '
     
     # Open the tmp file to extract the path to the pdf from the first line
-    with open( path_file, 'r') as f:
+    with open( tmp_pathFile, 'r') as f:
         first_line = f.readline().strip('\n')
         input_file = first_line.replace('%20',' ')
     
     # Get name of pdf (head of path)
     pdf_name = os.path.split(input_file)[1]
+    
+    # For the directory to the h2a-logfile extract the directory from the path to the h2a_Freeplane-changes tmp file
+    path_to_tmp_directory = os.path.dirname(tmp_pathFile)
     
     # time_current is only used for the h2a-logfile (has no effect, pure output)
     time_current = datetime.datetime.now(pytz.timezone('Europe/Berlin')).strftime("D:%Y%m%d%H%M%S%z")
@@ -48,7 +51,7 @@ def h2a_update_from_freeplane ( path_file="./h2a_freeplane-changes.tmp" ):
     annot_counter = 0
     
     # Loop over each annotation that was changed in Freeplane
-    with open( path_file, 'r') as f:
+    with open( tmp_pathFile, 'r') as f:
         # skip the first line (already read above for the pdf-file)
         next(f)
         
@@ -95,4 +98,4 @@ def h2a_update_from_freeplane ( path_file="./h2a_freeplane-changes.tmp" ):
         doc.saveIncr()
     
         ## Update h2a-logfile
-        update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing )    
+        update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing, path_to_tmp_directory )    
