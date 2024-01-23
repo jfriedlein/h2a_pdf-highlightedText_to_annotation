@@ -64,6 +64,9 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     ES = entry_separator
     line_break_replacer = ' ;xnx; '
 
+    # @note These delimiters are used, in addition to the default blankspace, to spread the continuous text in separate words.
+    #       This is a double-edged sword as sometimes it is not desired to split a word at these places.
+    delimiters_to_detect_words_in_PDF = ".,;/"
     list_of_punctuationMarks_that_are_removed_if_leadingTrailing = [",",".",";"]
     
     # Build the name of input_filename which excludes the file extensions
@@ -143,7 +146,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                     annot_cleaned_list.append( annot_cleaned(annot, highlight_coords, n_rects) )
                 
         # Retrieve all words on this page including their coordinates
-        all_words_on_page = page.get_text('words')
+        all_words_on_page = page.get_text('words', delimiters=delimiters_to_detect_words_in_PDF)
         
         # Loop over all annotations of this page
         # @note We could combine the loop above and this one, but to keep it cleaner and easier to follow, we use separate loops.
@@ -194,9 +197,9 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                     #       So how to decide this?
                     highlighted_phrase = " ".join(highlight_text)
                     # Remove leading and trailing punctuation marks
-                    if ( highlighted_phrase[0] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
+                    if ( len(highlighted_phrase)>=1 and highlighted_phrase[0] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
                         highlighted_phrase = highlighted_phrase[1:]
-                    if ( highlighted_phrase[-1] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
+                    if ( len(highlighted_phrase)>=1 and highlighted_phrase[-1] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
                         highlighted_phrase = highlighted_phrase[:-1]
                     # Extract existing comment part (stored after autoMarker e.g.' >a> ') from the annotation content
                     # (look inside the function, it's not trivial)
