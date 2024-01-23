@@ -76,3 +76,4 @@ output_mode, update procedure, autoMarker
 - drag&drop of folder with pdfs
 - top to bottom for h2a_txt
 - what happens if an annotation spans two pages?
+- maybe add that if a highlighted_phrase is empty, we change the delimiters for word splitting or just extract the highlighted characters
