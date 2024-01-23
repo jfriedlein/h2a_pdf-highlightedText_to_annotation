@@ -21,6 +21,8 @@ import time
 # Import "os" for splitting the path with the operator specific file separator
 import os
 
+import codecs
+
 # Load the h2a modules from the subfolder "h2a_functions"
 import sys
 from h2a_functions.sort_rectangles import sort_rectangles
@@ -61,6 +63,8 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     entry_separator = ' ;x; '
     ES = entry_separator
     line_break_replacer = ' ;xnx; '
+
+    list_of_punctuationMarks_that_are_removed_if_leadingTrailing = [",",".",";"]
     
     # Build the name of input_filename which excludes the file extensions
     # remove file extension
@@ -91,11 +95,11 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     # Read H2A-protocol
     H2A_protocol = retrieve_H2A_protocol( doc[0] )
     
-    # For the txt output mode, open an empty txt file
+    # For the txt output mode, open an empty txt file, use utf-8 to capture special characters [https://stackoverflow.com/questions/491921/unicode-utf-8-reading-and-writing-to-files-in-python]
     if ( output_mode == 'h2a_txt' ):
-        f = open(input_filename+'_annot.txt', 'w')
+        f = codecs.open(input_filename+'_annot.txt', 'w', "utf-8")
     elif ( output_mode == 'h2a_freeplane' ):
-        f = open(tmp_pathFile, 'w')
+        f = codecs.open(tmp_pathFile, "w", "utf-8")
         
     # Loop over each page
     # Count the number of processed annotations
@@ -186,9 +190,14 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                                 highlight_text.append(highlighted_word)
                     # Join the words in the highlight_text for the current annotation by spaces
                     # Details: [https://pymupdf.readthedocs.io/en/latest/annot.html#Annot.info]
-                    # @todo When a word is split over multiple lines like "split-\nting", we can remove the hyphen, but e.g. not for "FEM-method"
+                    # @todo When a word is split over multiple lines like "splitting" as "split-\nting", we can remove the hyphen, but e.g. not for "FEM-method"
                     #       So how to decide this?
                     highlighted_phrase = " ".join(highlight_text)
+                    # Remove leading and trailing punctuation marks
+                    if ( highlighted_phrase[0] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
+                        highlighted_phrase = highlighted_phrase[1:]
+                    if ( highlighted_phrase[-1] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
+                        highlighted_phrase = highlighted_phrase[:-1]
                     # Extract existing comment part (stored after autoMarker e.g.' >a> ') from the annotation content
                     # (look inside the function, it's not trivial)
                     comment_text = extract_comment_text( annot_i.annotation, H2A_protocol, title_suffix, autoMarker )
@@ -197,6 +206,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         output_content = highlighted_phrase
                     else:
                         output_content = highlighted_phrase + autoMarker + comment_text
+
                     # Depending on the output_mode, update the annotation and/or output the text
                     # For output_mode h2a and h2a_annot, we update the annotation with the content, the modification date, and the title
                     if ( output_mode in {'h2a','h2a_annot'} ):
