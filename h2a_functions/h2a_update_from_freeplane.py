@@ -23,6 +23,8 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
     # Entry-separator "ES"
     # @todo This should be unified here in "h2a_highlightedText_to_annotation.py" and in the Freeplane groovy script
     ES = ' ;x; '
+
+    line_break_replacer = ' ;xnx; '
     
     # Open the tmp file to extract the path to the pdf from the first line
     # @note For some reason we cannot read the first line as with codecs.open and "utf-8", but this is also not needed
@@ -62,7 +64,7 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
         for line in f:
             # Extract the information on the annotation from the line in the tmp-file
             line_split = line.split( ES )
-            annot_content_fromFreeplane = line_split[0]
+            annot_content_fromFreeplane = line_split[0].replace(line_break_replacer,'\n')
             annot_page = int(line_split[1]) - 1
             #annot_type = line_split[2]
             annot_ID = line_split[3]
