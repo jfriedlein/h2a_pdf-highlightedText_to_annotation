@@ -8,6 +8,8 @@ import time
 # Import "os" for splitting the path with the operator specific file separator
 import os
 
+import codecs
+
 # Load the h2a modules from the subfolder "h2a_functions"
 import sys
 from h2a_functions.update_h2a_logfile import update_h2a_logfile
@@ -23,7 +25,8 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
     ES = ' ;x; '
     
     # Open the tmp file to extract the path to the pdf from the first line
-    with open( tmp_pathFile, 'r') as f:
+    # @note For some reason we cannot read the first line as with codecs.open and "utf-8", but this is also not needed
+    with open( tmp_pathFile, 'r' ) as f:
         first_line = f.readline().strip('\n')
         input_file = first_line.replace('%20',' ')
     
@@ -51,7 +54,8 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
     annot_counter = 0
     
     # Loop over each annotation that was changed in Freeplane
-    with open( tmp_pathFile, 'r') as f:
+    # We read the file with utf-8 encoding using codecs to also get special characters [https://stackoverflow.com/questions/491921/unicode-utf-8-reading-and-writing-to-files-in-python]
+    with codecs.open( tmp_pathFile, 'r', "utf-8") as f:
         # skip the first line (already read above for the pdf-file)
         next(f)
         
