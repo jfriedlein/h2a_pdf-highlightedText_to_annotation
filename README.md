@@ -71,9 +71,14 @@ output_mode, update procedure, autoMarker
 
 @todo extent setup
 
+## note
+The more I look into PDF files, the less faith I have in this format. h2a can only extract what text is contained in the pdf. E.g. in the pdf the text might appear as "p=0.1", but when you copy this text from the pdf into a text editor you get  "p ¼ 0:1". Also what appears to be "µm" turns into "mm", which can be a huge mistake. Maybe try OCR on the pdf to get a better text interpretation.
+
 ## todo
 - hyphen or no hyphen
 - drag&drop of folder with pdfs
 - top to bottom for h2a_txt
 - what happens if an annotation spans two pages?
 - maybe add that if a highlighted_phrase is empty, we change the delimiters for word splitting or just extract the highlighted characters
+- try get_text with clip option (seems to work better than get_textbox) instead of cumbersome check of coverage and rebuilding (would also remove delimiters problem)
+- Maybe implement own get_words function to use delimiters properly (split words based on multiple delimiters but remember what delimiter was used to split the words, so we can glue them back together with the correct delimiter). The pymupdf delimiters are a double-edged sword as sometimes it is not desired to split a word at these places. E.g. splitting at "." might make sense for mail addresses, but destroys "0.2" as "0 2". Moreover, "The “word” strings will not contain any delimiting character." [https://pymupdf.readthedocs.io/en/latest/page.html#Page.get_text], which is problematic, because you might want to detect the words from "table/desktop" as "table" and "desktop" thus using "/" as delimiter, but if the entire string shall be read you want "table/desktop" and not "table desktop" assuming you glue the split words together by blankspace.
