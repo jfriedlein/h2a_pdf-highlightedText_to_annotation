@@ -65,8 +65,14 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     line_break_replacer = ' ;xnx; '
 
     # @note These delimiters are used, in addition to the default blankspace, to spread the continuous text in separate words.
-    #       This is a double-edged sword as sometimes it is not desired to split a word at these places.
-    delimiters_to_detect_words_in_PDF = ".,;/"
+    #       This is a double-edged sword as sometimes it is not desired to split a word at these places. E.g. splitting at "." 
+    #       might make sense for mail addresses, but destroys "0.2" as "0 2". Moreover, "The “word” strings will not contain any 
+    #       delimiting character." [https://pymupdf.readthedocs.io/en/latest/page.html#Page.get_text], which is problematic, 
+    #       because you might want to detect the words from "table/desktop" as "table" and "desktop" thus using "/" as delimiter, 
+    #       but if the entire string shall be read you want "table/desktop" and not "table desktop".
+    # @todo What we want is detect words by custom delimiters, but not removing them from the text.
+    delimiters_to_detect_words_in_PDF = ""
+
     list_of_punctuationMarks_that_are_removed_if_leadingTrailing = [",",".",";"]
     
     # Build the name of input_filename which excludes the file extensions
@@ -174,7 +180,9 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                             h_rect = annot_i.coords[i_rect][0:4]
                         # Assign the x,y and min,max coordinates of the bounding box for this highlighted rectangle
                         xmin_h, ymin_h, xmax_h, ymax_h = h_rect[0], h_rect[1], h_rect[2], h_rect[3]
-                        # Loop over all words on this page
+                        # Loop over all words on this page to find words that cover the rectangle of the highlight
+                        # @note We could use highlighted_word = page.get_textbox( h_rect ), but this is currently (pymupdf v1.23.5) not reliable
+                        # @todo "page.get_text( 'text', clip=h_rect, textpage=text_page )" seems to work better, test it
                         for w in all_words_on_page:
                             # Retrieve the word as text
                             # @todo Improve encoding to be able to read more symbols and special characters
@@ -188,7 +196,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                             if ( coverage > 0.3 and is_on_same_line( fitz.Rect(w[0:4]), fitz.Rect(h_rect[0:4]) ) ):
                                 highlighted_word = current_word
                                 # Debugging
-                                #highlighted_word = highlighted_word+'_'+str(round(coverage,2))
+                                #highlighted_word = highlighted_word + '_' + str(round(coverage,2))
                                 # Append the current word to a list of yet not connected words
                                 highlight_text.append(highlighted_word)
                     # Join the words in the highlight_text for the current annotation by spaces
@@ -230,7 +238,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         annot_i.annotation.set_info( content=output_content, modDate=time_current, title=new_title )
                         # Output the detected highlighted text to the output file
                         # @todo Centralise the output in a separate function to control it in a single  place
-                        f.write( output_content.replace('\n',line_break_replacer) + ES
+                        f.write( output_content.replace('\n',line_break_replacer).replace('\r',line_break_replacer) + ES
                                  + "highlight" + ES + str(page.number+1) + ES
                                  + annot_i.annotation.info['id']  + ES + time_current + ES + '\n' )
                 # n_rects = 0 means we process a pop-up note annotation, where there is no highlight text to be extracted, 
@@ -242,7 +250,8 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         new_title = get_new_title( annot_i.annotation, title_suffix )
                         # Do not reset the content, but only the modification time
                         annot_i.annotation.set_info( modDate=time_current, title=new_title )
-                        annot_content = annot_i.annotation.info['content'].replace('\n',line_break_replacer)
+                        # Replace line breaks ("\n" and also carriage return "\r", the latter seems to occur for an empty line) by the line_break_replacer
+                        annot_content = annot_i.annotation.info['content'].replace('\n',line_break_replacer).replace('\r',line_break_replacer)
                         # Output the note content to the output file
                         f.write( annot_content + ES
                                  + "note" + ES + str(page.number+1) + ES
@@ -251,7 +260,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
             # For the h2a_freeplane output_mode, we need to output all annotation even ones that did not change in the pdf ot keep Freeplane up to date
             elif ( output_mode == 'h2a_freeplane' ):
                 # We do not extract the highlighted text, but only take the existing content and output it
-                annot_content = annot_i.annotation.info['content'].replace('\n',line_break_replacer)
+                annot_content = annot_i.annotation.info['content'].replace('\n',line_break_replacer).replace('\r',line_break_replacer)
                 annot_time = annot_i.annotation.info['modDate'] # Keep the old time
                 # if the modification date is empty
                 if ( len(annot_time)==0 ):
