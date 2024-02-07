@@ -21,15 +21,24 @@ from h2a_functions.h2a_highlightedText_to_annotation import h2a_highlightedText_
 # @todo Do we need to remove the file extension for h2a-Freeplane?
 input_filename = sys.argv[1].replace("%20"," ")
 # Extract the full path and filename of the output file for Freeplane, e.g. "h2a_pdf-output.tmp"
-tmp_directory = sys.argv[2].replace("%20"," ")
+tmp_directory = "./h2a_pdf-output.tmp"
+if ( len(sys.argv)>=3 ):
+    tmp_directory = sys.argv[2].replace("%20"," ")
 # Output mode is fixed to Freeplane
 output_mode = 'h2a_freeplane'
 ## USER-Parameters
 # Choose the update procedure:
+# - 'update_all_removeCommentText'
 # - 'update_all': overwrite extracted text if '>a>' or '>p>' or none/new, also removes 'p' marker
 # - 'update_auto': do not touch 'p', only modify 'a' and none/new
 # - 'update_new': do not touch 'p' or 'a', only none/new (recommended)
 update_procedure = 'update_new'
+if ( len(sys.argv)>=4 ):
+    if ( sys.argv[3] in ['update_new','update_auto','update_all','update_all_removeCommentText'] ):
+        update_procedure = sys.argv[3]
+    else:
+        print("h2aFreeplane_caller<< Unknown update_procedure="+sys.argv[3])
+        
 # Choose whether a marker should be placed after the extracted text like
 # "[highlighted text] >a> [existing text]"
 # alternative for instance "[highlighted text]: [existing text]" using autoMarker=': '
