@@ -28,7 +28,6 @@ import sys
 from h2a_functions.sort_rectangles import sort_rectangles
 from h2a_functions.is_on_same_line import is_on_same_line
 from h2a_functions.containment_of_a_in_b import containment_of_a_in_b
-#from annot_toBe_changed import annot_toBe_changed
 from h2a_functions.annot_toBe_changed_time import annot_toBe_changed_time
 from h2a_functions.extract_comment_text import extract_comment_text
 from h2a_functions.process_H2A_protocol import process_H2A_protocol
@@ -37,7 +36,6 @@ from h2a_functions.annot_cleaned import annot_cleaned
 from h2a_functions.retrieve_H2A_protocol import retrieve_H2A_protocol
 from h2a_functions.get_new_title import get_new_title
 from h2a_functions.get_output_file_annot import get_output_file_annot
-from h2a_functions.get_datetime_from_pdftime import get_datetime_from_pdftime
 
 # Choose the update procedure update_procedure:
 # - 'update_all': overwrite extracted text if '>a>' or '>p>' or none/new, also removes 'p' marker
@@ -91,7 +89,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     time_current = datetime.datetime.now(pytz.timezone('Europe/Berlin')).strftime("D:%Y%m%d%H%M%S%z")
     time_current = time_current[0:19]+"'"+time_current[19:]
 
-    print("Processing the pages of '"+pdf_name+"' ...")
+    print("h2a_highlightedText_to_annotation<< Processing the pages of '"+pdf_name+"' ...")
     # Start timer to measure processing time
     tic = time.process_time()
     
@@ -120,7 +118,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
         for annot in page.annots():
             # Only consider "Highlight" (type=8) annotations here [https://pymupdf.readthedocs.io/en/latest/vars.html#annotationtypes]
             # For "Note"/"Text" annotations there is no highlighted text
-            if ( annot.type[0] == 8 ):
+            if ( annot.type[0] == fitz.PDF_ANNOT_HIGHLIGHT ):
                 # Get all coordinates of the vertices that span the highlight (rectangles)
                 all_coordinates = annot.vertices
                 highlight_coords = []
@@ -144,7 +142,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                 annot_cleaned_list.append( annot_cleaned(annot, highlight_coords, n_rects) )
             # For the text and freeplane output, we consider all  annotation types that may contain data/information/content
             elif ( output_mode == "h2a_txt" or output_mode == "h2a_freeplane" ):
-                if ( annot.type[0] == 0 ): # pop-up annotation
+                if ( annot.type[0] == fitz.PDF_ANNOT_TEXT or annot.type[0] == fitz.PDF_ANNOT_FREE_TEXT ): # pop-up annotation or free-text
                     # Create a dummy array for the coordinates
                     highlight_coords = [0, 0, 0, 0]
                     # Set number of rectangles to 0 to indicate a non-highlight annotation (no need to extract highlighted text for this one)
@@ -163,8 +161,21 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                 # The creationDate is important to detect a "new" annotation. However, if the creationDate is yet empty,
                 #  this means we have not yet processed this annotation anyway, so it is clearly new and more recent than
                 #  the last h2a-run (see details in annot_toBe_changed_time(*))
+                if ( len(annot_i.annotation.info['modDate'])==0 ):
+                    annot_i.annotation.set_info( modDate=time_current )
                 annot_modDate = annot_i.annotation.info['modDate']
                 annot_i.annotation.set_info( creationDate=annot_modDate )
+            # If the annotation misses an ID, we recreate it with an automatically created ID
+            # @note The automatically created ID is only page-unique and not unique throughout the PDF
+            if ( len(annot_i.annotation.info['id'])==0 ):
+                print("h2a_highlightedText_to_annotation<< Found annotation without ID. Recreating it with new ID.")
+                annot_text_tmp = annot_i.annotation.info['content']
+                annot_modDate_tmp = annot_i.annotation.info['modDate']
+                annot_creationDate_tmp = annot_i.annotation.info['creationDate']
+                annot_title_tmp = annot_i.annotation.info['title']
+                page.delete_annot( annot_i.annotation )
+                annot_i.annotation = page.add_highlight_annot( quads=annot_i.coords )
+                annot_i.annotation.set_info( content=annot_text_tmp, creationDate=annot_creationDate_tmp, modDate=annot_modDate_tmp, title=annot_title_tmp )
             # First check whether the annotation is to be changed based on the update_procedure, the creation date, and the modification date            
             if annot_toBe_changed_time( annot_i.annotation, time_current, H2A_protocol, output_mode, update_procedure ):
                 # n_rects > 0 means we process a highlight annotation which contains rectangles that need to be used to extract the text
@@ -204,20 +215,26 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                     # @todo When a word is split over multiple lines like "splitting" as "split-\nting", we can remove the hyphen, but e.g. not for "FEM-method"
                     #       So how to decide this?
                     highlighted_phrase = " ".join(highlight_text)
-                    # Remove leading and trailing punctuation marks
+                    # Remove leading and trailing punctuation marks that are usually undesired
                     if ( len(highlighted_phrase)>=1 and highlighted_phrase[0] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
                         highlighted_phrase = highlighted_phrase[1:]
                     if ( len(highlighted_phrase)>=1 and highlighted_phrase[-1] in list_of_punctuationMarks_that_are_removed_if_leadingTrailing ):
                         highlighted_phrase = highlighted_phrase[:-1]
+                    # If the first character is the equal sign "=" add an apostrophe to avoid Freeplane trying to detect this node as formula (start with equal sign)
+                    if ( len(highlighted_phrase)>=1 and highlighted_phrase[0] == "=" ):
+                        highlighted_phrase = "'" + highlighted_phrase
+                    # If the update procedure states to remove the comment text, we do not read the current comment_text, thus overwriting it by ""
+                    if ( update_procedure == "update_all_removeCommentText" ):
+                        comment_text = ""
                     # Extract existing comment part (stored after autoMarker e.g.' >a> ') from the annotation content
                     # (look inside the function, it's not trivial)
-                    comment_text = extract_comment_text( annot_i.annotation, H2A_protocol, title_suffix, autoMarker )
+                    else:
+                        comment_text = extract_comment_text( annot_i.annotation, H2A_protocol, title_suffix, autoMarker )
                     # Build new content of annotation from detected highlighted text and existing comment_text
                     if ( len(comment_text)==0 ):
                         output_content = highlighted_phrase
                     else:
                         output_content = highlighted_phrase + autoMarker + comment_text
-
                     # Depending on the output_mode, update the annotation and/or output the text
                     # For output_mode h2a and h2a_annot, we update the annotation with the content, the modification date, and the title
                     if ( output_mode in {'h2a','h2a_annot'} ):
@@ -252,6 +269,9 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         annot_i.annotation.set_info( modDate=time_current, title=new_title )
                         # Replace line breaks ("\n" and also carriage return "\r", the latter seems to occur for an empty line) by the line_break_replacer
                         annot_content = annot_i.annotation.info['content'].replace('\n',line_break_replacer).replace('\r',line_break_replacer)
+                        # If the first character is the equal sign "=" add an apostrophe to avoid Freeplane trying to detect this node as formula (start with equal sign)
+                        if ( len(annot_content)>=1 and annot_content[0] == "=" ):
+                            annot_content = "'" + annot_content
                         # Output the note content to the output file
                         f.write( annot_content + ES
                                  + "note" + ES + str(page.number+1) + ES
@@ -272,14 +292,14 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                 if ( annot_i.n_rects > 0 ):
                     annot_type = "highlight"
                 else:
-                    annot_type = "note"
+                    annot_type = "text"
 
                 f.write( annot_content + ES
                          + annot_type + ES + str(page.number+1) + ES
                          + annot_i.annotation.info['id']  + ES + annot_time + ES + '\n' )
             
     time_processing = time.process_time() - tic
-    print("... finished processing the pages in "+str(round(time_processing,2))+".")
+    print("h2a_highlightedText_to_annotation<< ... finished processing the pages in "+str(round(time_processing,2))+".")
     
     
     ## Process H2A protocol
