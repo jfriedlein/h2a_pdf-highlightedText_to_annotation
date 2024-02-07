@@ -5,7 +5,7 @@ def sort_rectangles ( list_of_rectangles ):
     # The coordinate origin appears to be in the top-left corner
     line_i = [0] * len(list_of_rectangles)
     sorted_list_of_rects = []
-    for i_line in range(1,12):
+    for i_line in range(1,30):
         # Retrieve list of ymin coordinates of unassigned rectangles
         # [https://stackoverflow.com/questions/2739800/extract-list-of-attributes-from-list-of-objects-in-python]
         list_unassigned_rects = []
@@ -50,7 +50,8 @@ def sort_rectangles ( list_of_rectangles ):
             sorted_list_of_rects.append( list_of_rectangles[x[1]] )
         
         # Abort if the loop seems to run forever
-        if ( i_line==11 ):
-            print("sort_rectangles<< Reached line number 9")
+        if ( i_line==29 ):
+            print("sort_rectangles<< Reached line number 29 and assuming an endless loop. Aborting.")
+            break  # ... abort the line sorting loop
             
     return sorted_list_of_rects
