@@ -8,7 +8,7 @@ def annot_toBe_changed_time( annot, time_current, H2A_protocol, output_mode, upd
     #  ... the output mode is h2a_txt, or
     #  ... there is no H2A-protocol, which means a yet unprocessed file
     # then this annotation is to be changed -> return True
-    if ( update_procedure == 'update_all' or output_mode=='h2a_txt' or len(H2A_protocol) == 0 ):
+    if ( update_procedure == 'update_all' or update_procedure == 'update_all_removeCommentText' or output_mode=='h2a_txt' or len(H2A_protocol) == 0 ):
         return True # ... to be processed
 
 	# Else we need to check for creation and modification times
