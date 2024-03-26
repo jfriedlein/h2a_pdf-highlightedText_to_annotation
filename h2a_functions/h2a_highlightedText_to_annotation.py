@@ -29,6 +29,7 @@ from h2a_functions.sort_rectangles import sort_rectangles
 from h2a_functions.is_on_same_line import is_on_same_line
 from h2a_functions.containment_of_a_in_b import containment_of_a_in_b
 from h2a_functions.annot_toBe_changed_time import annot_toBe_changed_time
+from h2a_functions.datetime_validation import datetime_validation
 from h2a_functions.extract_comment_text import extract_comment_text
 from h2a_functions.process_H2A_protocol import process_H2A_protocol
 from h2a_functions.update_h2a_logfile import update_h2a_logfile
@@ -62,6 +63,9 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
     ES = entry_separator
     line_break_replacer = ' ;xnx; '
 
+    use_get_text_clip = False
+    do_sort_rectangles = True
+    
     # @note These delimiters are used, in addition to the default blankspace, to spread the continuous text in separate words.
     #       This is a double-edged sword as sometimes it is not desired to split a word at these places. E.g. splitting at "." 
     #       might make sense for mail addresses, but destroys "0.2" as "0 2". Moreover, "The “word” strings will not contain any 
@@ -118,6 +122,7 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
         for annot in page.annots():
             # Only consider "Highlight" (type=8) annotations here [https://pymupdf.readthedocs.io/en/latest/vars.html#annotationtypes]
             # For "Note"/"Text" annotations there is no highlighted text
+            # @todo Skip this if the annotation should not be modified/changed (annot_toBe_changed_time)
             if ( annot.type[0] == fitz.PDF_ANNOT_HIGHLIGHT ):
                 # Get all coordinates of the vertices that span the highlight (rectangles)
                 all_coordinates = annot.vertices
@@ -137,7 +142,8 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         highlight_coords.append(highlight_coord)
                         n_rects = n_rects + 1
                     # Sort the rectangles of this single annotation according to the reading flow
-                    highlight_coords = sort_rectangles( highlight_coords )
+                    if ( do_sort_rectangles ):
+                        highlight_coords = sort_rectangles( highlight_coords )
                 # Append an annotation object containing the annotation, the coords and the number of rectangles
                 annot_cleaned_list.append( annot_cleaned(annot, highlight_coords, n_rects) )
             # For the text and freeplane output, we consider all  annotation types that may contain data/information/content
@@ -156,12 +162,12 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
         # @note We could combine the loop above and this one, but to keep it cleaner and easier to follow, we use separate loops.
         for annot_i in annot_cleaned_list:
             # If the creation date is empty/missing ...
-            if ( len(annot_i.annotation.info['creationDate'])==0 ):
+            if ( len(annot_i.annotation.info['creationDate'])==0 or datetime_validation( annot_i.annotation.info['creationDate'] )==False ):
                 # ... we write the modification date into this spot to ensure that creationDate is non-empty.
                 # The creationDate is important to detect a "new" annotation. However, if the creationDate is yet empty,
                 #  this means we have not yet processed this annotation anyway, so it is clearly new and more recent than
                 #  the last h2a-run (see details in annot_toBe_changed_time(*))
-                if ( len(annot_i.annotation.info['modDate'])==0 ):
+                if ( len(annot_i.annotation.info['modDate'])==0  or datetime_validation( annot_i.annotation.info['modDate'] )==False):
                     annot_i.annotation.set_info( modDate=time_current )
                 annot_modDate = annot_i.annotation.info['modDate']
                 annot_i.annotation.set_info( creationDate=annot_modDate )
@@ -193,23 +199,29 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         xmin_h, ymin_h, xmax_h, ymax_h = h_rect[0], h_rect[1], h_rect[2], h_rect[3]
                         # Loop over all words on this page to find words that cover the rectangle of the highlight
                         # @note We could use highlighted_word = page.get_textbox( h_rect ), but this is currently (pymupdf v1.23.5) not reliable
-                        # @todo "page.get_text( 'text', clip=h_rect, textpage=text_page )" seems to work better, test it
-                        for w in all_words_on_page:
-                            # Retrieve the word as text
-                            # @todo Improve encoding to be able to read more symbols and special characters
-                            current_word = w[4]
-                            # Assign the x,y and min,max coordinates of the current word
-                            xmin_w, ymin_w, xmax_w, ymax_w = w[0],w[1],w[2],w[3]
-                            # Compute the coverage to see whether the current word lies within the highlight bounding box
-                            coverage = containment_of_a_in_b( xmin_w, ymin_w, xmax_w, ymax_w, xmin_h, ymin_h, xmax_h, ymax_h )
-                            # If the current word lies by 30% in the highlight
-                            # and it is in the same line, we see this as "contained" -> the current_word is highlighted
-                            if ( coverage > 0.3 and is_on_same_line( fitz.Rect(w[0:4]), fitz.Rect(h_rect[0:4]) ) ):
-                                highlighted_word = current_word
-                                # Debugging
-                                #highlighted_word = highlighted_word + '_' + str(round(coverage,2))
-                                # Append the current word to a list of yet not connected words
-                                highlight_text.append(highlighted_word)
+                        # @todo "highlight_text = page.get_text( 'text', clip=h_rect, textpage=text_page )" seems to work better, test it
+                        if ( use_get_text_clip ):
+                            extracted_text_auto = page.get_text( 'text', clip=h_rect )
+                            if ( len(extracted_text_auto)>=2 and extracted_text_auto[-1]=="\n" ):
+                                extracted_text_auto = extracted_text_auto[0:-1]
+                            highlight_text.append( extracted_text_auto )
+                        else:
+                            for w in all_words_on_page:
+                                # Retrieve the word as text
+                                # @todo Improve encoding to be able to read more symbols and special characters
+                                current_word = w[4]
+                                # Assign the x,y and min,max coordinates of the current word
+                                xmin_w, ymin_w, xmax_w, ymax_w = w[0],w[1],w[2],w[3]
+                                # Compute the coverage to see whether the current word lies within the highlight bounding box
+                                coverage = containment_of_a_in_b( xmin_w, ymin_w, xmax_w, ymax_w, xmin_h, ymin_h, xmax_h, ymax_h )
+                                # If the current word lies by 30% in the highlight
+                                # and it is in the same line, we see this as "contained" -> the current_word is highlighted
+                                if ( coverage > 0.3 and is_on_same_line( fitz.Rect(w[0:4]), fitz.Rect(h_rect[0:4]) ) ):
+                                    highlighted_word = current_word
+                                    # Debugging
+                                    #highlighted_word = highlighted_word + '_' + str(round(coverage,2))
+                                    # Append the current word to a list of yet not connected words
+                                    highlight_text.append(highlighted_word)
                     # Join the words in the highlight_text for the current annotation by spaces
                     # Details: [https://pymupdf.readthedocs.io/en/latest/annot.html#Annot.info]
                     # @todo When a word is split over multiple lines like "splitting" as "split-\nting", we can remove the hyphen, but e.g. not for "FEM-method"
