@@ -98,28 +98,27 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
     time_processing = time.process_time() - tic
     print("... finished processing the pages in "+str(round(time_processing,2))+".")
     
-    if ( annot_counter > 0 ):
-        # We should not add this run to the H2A-protocol, because this would declare these changes as "auto",
-        #  but they come from manual changes in Freeplane, so they should be protected from overwriting
-        #process_H2A_protocol( annot_counter, modTimePDF_freeplaneChanges, time_processing, doc[0], h2a_version )
-    
-        # Write a keyword into the metadata of the pdf to mark/tag it as having been processed by h2a
-        # Extract the initial metadata
-        pdf_metadata = doc.metadata
-        # Ensure that the "keywords" key exists
-        if ( 'keywords' in pdf_metadata ):
-            # Extract the current keywords
-            current_keywords = pdf_metadata['keywords']
-            # If no keywords already exists ...
-            if ( len(current_keywords)==0 ):
-                # ... write the h2a keyword into the key
-                doc.set_metadata({"keywords": h2a_metadata_entry})
-            # If keywords already exist ...
-            elif ( h2a_metadata_entry not in current_keywords ):
-                # ... add the h2a key to the list of keywords, comma separated [https://stackoverflow.com/questions/44608608/the-separator-between-keywords-in-pdf-meta-data]
-                doc.set_metadata({"keywords": current_keywords+", "+h2a_metadata_entry})
-    
-        doc.saveIncr()
-    
-        ## Update h2a-logfile
-        update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing, path_to_tmp_directory )    
+    # We should not add this run to the H2A-protocol, because this would declare these changes as "auto",
+    #  but they come from manual changes in Freeplane, so they should be protected from overwriting
+    #process_H2A_protocol( annot_counter, modTimePDF_freeplaneChanges, time_processing, doc[0], h2a_version )
+
+    # Write a keyword into the metadata of the pdf to mark/tag it as having been processed by h2a
+    # Extract the initial metadata
+    pdf_metadata = doc.metadata
+    # Ensure that the "keywords" key exists
+    if ( 'keywords' in pdf_metadata ):
+        # Extract the current keywords
+        current_keywords = pdf_metadata['keywords']
+        # If no keywords already exists ...
+        if ( len(current_keywords)==0 ):
+            # ... write the h2a keyword into the key
+            doc.set_metadata({"keywords": h2a_metadata_entry})
+        # If keywords already exist ...
+        elif ( h2a_metadata_entry not in current_keywords ):
+            # ... add the h2a key to the list of keywords, comma separated [https://stackoverflow.com/questions/44608608/the-separator-between-keywords-in-pdf-meta-data]
+            doc.set_metadata({"keywords": current_keywords+", "+h2a_metadata_entry})
+
+    doc.saveIncr()
+
+    ## Update h2a-logfile
+    update_h2a_logfile( time_current, pdf_name, h2a_version, annot_counter, n_pages, time_processing, path_to_tmp_directory )    
