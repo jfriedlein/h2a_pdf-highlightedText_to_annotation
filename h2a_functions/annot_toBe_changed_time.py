@@ -14,11 +14,11 @@ def annot_toBe_changed_time( annot, time_current, H2A_protocol, output_mode, upd
 	# Else we need to check for creation and modification times
     # Read the creation date of the annotation (ensured that it is non-empty from h2a_highlightedText_to_annotation(*))
     creationDate = annot.info['creationDate']
-    creaDate = get_datetime_from_pdftime( creationDate )
+    creaDate = get_datetime_from_pdftime( creationDate, annot )
 
     # Extract the last h2a run from the H2A-protocol to get the time when h2a was last executed
     last_h2a_run = re.split(r' |; ',H2A_protocol[2])[-2]
-    last_h2a_time = get_datetime_from_pdftime( last_h2a_run )
+    last_h2a_time = get_datetime_from_pdftime( last_h2a_run, annot )
 
     # "update_new": Only process annotations which have been created since the last h2a run,
     #               because these are completely unprocessed yet so "new"
