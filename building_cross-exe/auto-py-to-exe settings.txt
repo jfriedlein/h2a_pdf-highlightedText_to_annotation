@@ -1,6 +1,9 @@
-Open auto-py-to-exe if multiple python versions are installed: [https://pypi.org/project/auto-py-to-exe/]
-python -m auto_py_to_exe
+Linux:
+run "auto-py-to-exe" in the terminal
 
+Windows:
+Open auto-py-to-exe if multiple python versions are installed: [https://pypi.org/project/auto-py-to-exe/]
+run "python -m auto_py_to_exe" in the terminal
 
 pyinstaller settings for building h2a_GUI: [https://stackoverflow.com/questions/68955373/pyinstaller-tclerror-cant-find-package-tkdnd-how-can-i-fix-this-error]
 Linux
