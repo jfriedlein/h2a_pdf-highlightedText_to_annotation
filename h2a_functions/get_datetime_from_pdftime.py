@@ -1,6 +1,6 @@
 import datetime
 #import pytz
-def get_datetime_from_pdftime( pdf_time ):
+def get_datetime_from_pdftime( pdf_time, annot=0 ):
     # juggle between different date formats
     if ( "'" in pdf_time ): # timezone information is given
         #return datetime.datetime.strptime(pdf_time.replace("'", ""), "D:%Y%m%d%H%M%S%z").astimezone(pytz.timezone('Europe/Berlin')).strftime("D:%Y%m%d%H%M%S%z")
