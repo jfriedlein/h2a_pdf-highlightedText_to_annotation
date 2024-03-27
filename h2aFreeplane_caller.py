@@ -16,6 +16,8 @@ from h2a_functions.h2a_highlightedText_to_annotation import h2a_highlightedText_
 # python3 h2aFreeplane_caller.py "pdf-file.pdf" "tmp-file.tmp"
 # or via a pyinstaller executable
 # h2aFreeplane_caller "pdf-file.pdf" "tmp-file.tmp"
+# or for debugging in Spyder [https://stackoverflow.com/questions/53628850/passing-arguments-to-spyder-for-debugging-file]
+# debugfile('h2aFreeplane_caller.py', args='test.pdf')
 
 # Extract the full path and filename of the pdf from the command line option, here "%20" might have been used to replace blankspaces
 # @todo Do we need to remove the file extension for h2a-Freeplane?
