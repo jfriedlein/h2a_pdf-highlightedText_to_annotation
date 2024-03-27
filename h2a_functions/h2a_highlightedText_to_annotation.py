@@ -179,8 +179,18 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                 annot_modDate_tmp = annot_i.annotation.info['modDate']
                 annot_creationDate_tmp = annot_i.annotation.info['creationDate']
                 annot_title_tmp = annot_i.annotation.info['title']
+                if ( annot_i.annotation.type[0] == fitz.PDF_ANNOT_HIGHLIGHT  ):
+                    annot_i.annotation = page.add_highlight_annot( quads=annot_i.coords )
+                elif ( annot_i.annotation.type[0] == fitz.PDF_ANNOT_FREE_TEXT ):
+                    annot_i.annotation = page.add_freetext_annot( annot_i.annotation.rect, annot_text_tmp )
+                elif ( annot_i.annotation.type[0] == fitz.PDF_ANNOT_TEXT ):
+                    annot_i.annotation = page.add_text_annot(annot_i.annotation.point, annot_text_tmp )
+                else:
+                    print("h2a_highlightedText_to_annotation<< Found annotation without ID. However, type is not considered yet. So, we skip it.")
+                    break # end the loop
+
                 page.delete_annot( annot_i.annotation )
-                annot_i.annotation = page.add_highlight_annot( quads=annot_i.coords )
+
                 annot_i.annotation.set_info( content=annot_text_tmp, creationDate=annot_creationDate_tmp, modDate=annot_modDate_tmp, title=annot_title_tmp )
             # First check whether the annotation is to be changed based on the update_procedure, the creation date, and the modification date            
             if annot_toBe_changed_time( annot_i.annotation, time_current, H2A_protocol, output_mode, update_procedure ):
