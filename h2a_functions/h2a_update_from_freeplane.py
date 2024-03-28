@@ -92,6 +92,10 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
                         print( "h2a_update_from_freeplane<< The annotation changed in the PDF and in Freeplane. Which one to take?\n" )
                         sys.exit(1)
                     else:
+                        # @note It appears that it is not possible to set "content" to an empty string "",
+                        #        so we set it to blankspace " ", it case the string is empty
+                        if ( len(annot_content_fromFreeplane)<=0 ):
+                            annot_content_fromFreeplane = ' '
                         annot.set_info( content=annot_content_fromFreeplane, modDate=annot_modTimePDF )
                         annot_counter += 1
 
