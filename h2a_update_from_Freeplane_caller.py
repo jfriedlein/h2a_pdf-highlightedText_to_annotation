@@ -16,6 +16,8 @@ from h2a_functions.h2a_update_from_freeplane import h2a_update_from_freeplane
 # python3 h2a_update_from_freeplane_caller.py "freeplane-tmp-file.tmp"
 # or via a pyinstaller executable
 # h2a_update_from_freeplane_caller "freeplane-tmp-file.tmp"
+# or for debugging in Spyder
+# debugfile('h2a_update_from_Freeplane_caller.py', args='./h2a_freeplane-changes.tmp')
 
 # Extract the full path and filename of the Freeplane output (e.g. h2a_freeplane-changes.tmp) from the command line option, here "%20" might have been used to replace blankspaces
 path_file = sys.argv[1].replace("%20"," ")
