@@ -1,5 +1,5 @@
 # h2a_pdf-highlightedText_to_annotation
-Python tool to extract highlighted text from a pdf file and write this text into content of each annotation
+Python tool to extract highlighted text from a pdf file and write this text into content of each annotation. Also available as Freeplane script ["h2aFreeplane"](https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch).
 
 ## What it does
 This is a Python tool that reads a pdf page-by-page extracting the highlighted text and saves the highlighted words into the content field of the highlight annotation. This is ideally suited for Docear to prepare pdfs. Alternatively, the output mode "h2a_txt" enables to store the extracted highlight text to a separate txt file.
@@ -35,6 +35,9 @@ for GUI:
 ## Usability
 Start with a PDF that contains for instance highlighted text and user-comments:
 ![pdf with comments after h2a](https://github.com/jfriedlein/h2a_pdf-highlightedText_to_annotation/blob/main/guide/pdf%20with%20comments%20before%20h2a.png)
+
+### Freeplane script
+see h2aFreeplane ["https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch"](https://github.com/jfriedlein/h2aFreeplane_pdf-highlightedText_to_Freeplane_synch).
 
 ### GUI
 1. Start h2a GUI (python script h2a_GUI.py). Options:
