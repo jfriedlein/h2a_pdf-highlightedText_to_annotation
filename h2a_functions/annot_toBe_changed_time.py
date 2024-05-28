@@ -30,7 +30,7 @@ def annot_toBe_changed_time( annot, time_current, H2A_protocol, output_mode, upd
     # "update_auto": Process only annotations which were automatically modified or are new ("new" as for above "update_new")
     elif ( update_procedure == 'update_auto' ):
         # When updating only automatically created entries, we want to keep specifically
-        # the protected (manually chanaged entries) unchanged.
+        # the protected (manually changed entries) unchanged.
         # A manually changed entry is defined by a modification date different from any h2a-log time, 
         # because the user modified the annotation at a time, which does not equal a h2a run.
         # @todo-optimize If the reading of modDate creates errors, we know it was not created by h2a
