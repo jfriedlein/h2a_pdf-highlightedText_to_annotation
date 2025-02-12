@@ -1,17 +1,16 @@
-Linux:
-run "auto-py-to-exe" in the terminal
+How to build the cross-executables for the Python parts of h2aFreeplane
 
-Windows:
-Open auto-py-to-exe if multiple python versions are installed: [https://pypi.org/project/auto-py-to-exe/]
-run "python -m auto_py_to_exe" in the terminal
+1. Start auto-py-to-exe to compile the Python scripts to executables
+    Linux:
+    run "auto-py-to-exe" in the terminal
 
-pyinstaller settings for building h2a_GUI: [https://stackoverflow.com/questions/68955373/pyinstaller-tclerror-cant-find-package-tkdnd-how-can-i-fix-this-error]
-Linux
-pyinstaller --noconfirm --onefile --windowed --name "h2a-GUI" --add-data "~/.local/lib/python3.8/site-packages/tkinterdnd2:tkinterdnd2"  "path-to-h2a/h2a_GUI.py"
+    Windows:
+    Open auto-py-to-exe if multiple python versions are installed: [https://pypi.org/project/auto-py-to-exe/]
+    run "python -m auto_py_to_exe" in the terminal
 
-Windows
-pyinstaller --noconfirm --onefile --windowed --add-data "~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\site-packages\tkinterdnd2;tkinterdnd2"  "path-to-h2a/h2a_GUI.py"
+2. Auto Py to Exe - GUI (the resulting folder is easily 1 GB, so run the command directly on your hard drive)
+    - "Path to File" select the file "h2aFreeplane_caller.py"
+    - run auto-py-to-exe with default settings (onedir, console-based, ...)
+    - "Open output folder" copy the executable "h2aFreeplane_caller" and all relevant folders and files to the repo ("relevant" means that it is necessary to run the exe, either use trial and error, check the files in the repo, or consult the internet)
 
-
-pyinstaller settings for building h2aFreeplane_caller and h2a_update_from_Freeplane.
-using auto-py-to-exe with all default settings
+    - execute the same procedure for "h2a_update_from_Freeplane_caller.py"
