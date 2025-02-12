@@ -24,13 +24,14 @@ for GUI:
 - pip install tkinterdnd2
 
 ## Features
-- text sorting: annotations that contain multiple rectangle of highlighted text are sorted according to the reading flow
+- text sorting: annotations that contain multiple rectangle of highlighted text are sorted according to the reading flow (limited to reading flow top to bottom, does not work for highlights spanning two columns)
 - highlighted text detection: highlighted text in pdf files does not store the actual text, but the coordinates of the coloured rectangles. h2a detects which words are highlighted based on the area that a word of the pdf lies within the coloured rectangle and by checking that the word lies on the same line as the rectangle
 - H2A protocol: h2a creates a protocal that is entered in the pdf by a note annotation on the first page. This protocol stores all executions of h2a and enables infinite runs of h2a on the same file without doing any harm.
 - update procedures: modifying the content of the annotation after extraction is easily possible. Choosing the update procedure "update_new" or "update_all" will automatically detect such manually changed annotations and won't alter them. ("update_all" reprocesses all annotations)
 - comment text: If the content of the highlight annotation already contains some text, the extracted highlight text is appended to existing text as "[extracted highlight text] >a> [already existing comment text]". Here " >a> " can be specified by the user as the "autoMarker".
 - dynamic: You can change your own annotations freely. If you change some of the automatically extracted text in the content field of the annotation, h2a detects such custom changes automatically (based on the annotation's last modified time) and protects the annotation when using the update procedure "update_auto". Never loose any data and keep working with the PDF.
 - fast: Processing pdf with less than 100 pages takes a fraction of a second. Processing a book with 790 pages and 55 annotations takes around 1.4 seconds. If you look at the code, you might think all this looping over each word on the page takes forever, nope it is very very fast.
+- designed for change: As the modification time for an annotation is saved, and the time for each execution of h2a is stored in the H2A protocol, automatically extracted text of highlights can always be distinguished from manually edited text. Therefore, you could execute h2a on all of your pdfs at once, and if there is an update to the h2a engine, just rerun h2a on all pdfs without loosing any of your manual edits to the extracted text.
 
 ## Usability
 Start with a PDF that contains for instance highlighted text and user-comments:
