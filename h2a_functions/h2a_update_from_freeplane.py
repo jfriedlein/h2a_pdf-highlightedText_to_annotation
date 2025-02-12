@@ -29,11 +29,12 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
     h2a_metadata_entry = "h2a"
     
     # Open the tmp file to extract the path to the pdf from the first line
-    # @note For some reason we cannot read the first line as with codecs.open and "utf-8", but this is also not needed
-    with open( tmp_pathFile, 'r' ) as f:
+    # @note For some reason we cannot read the first line as with codecs.open and "utf-8", but this is also not needed for Linux. However, for Windows problems were observed when the path "input_File" contains e.g. "ü", so the encoding is set to utf-8 hoping to fix the issue
+    # Using "replace" on errors during encoding [https://stackoverflow.com/questions/9233027/unicodedecodeerror-charmap-codec-cant-decode-byte-x-in-position-y-character]
+    with open( tmp_pathFile, mode="r", encoding="utf-8", errors='replace' ) as f:
         first_line = f.readline().strip('\n')
         input_file = first_line.replace('%20',' ')
-    
+
     # Get name of pdf (head of path)
     pdf_name = os.path.split(input_file)[1]
     
