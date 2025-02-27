@@ -37,6 +37,7 @@ from h2a_functions.annot_cleaned import annot_cleaned
 from h2a_functions.retrieve_H2A_protocol import retrieve_H2A_protocol
 from h2a_functions.get_new_title import get_new_title
 from h2a_functions.get_output_file_annot import get_output_file_annot
+from h2a_functions.get_annot_colour import get_annot_colour
 
 # Choose the update procedure update_procedure:
 # - 'update_all': overwrite extracted text if '>a>' or '>p>' or none/new, also removes 'p' marker
@@ -283,11 +284,13 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         # @todo maybe merge the first part here with the above h2a (duplicate code)
                         new_title = get_new_title( annot_i.annotation, title_suffix )
                         annot_i.annotation.set_info( content=output_content, modDate=time_current, title=new_title )
+                        # Extract the stroke colour of the annotation as string to export it using f.write
+                        annot_colour = get_annot_colour(annot_i.annotation)
                         # Output the detected highlighted text to the output file
                         # @todo Centralise the output in a separate function to control it in a single  place
                         f.write( output_content.replace('\n',line_break_replacer).replace('\r',line_break_replacer) + ES
                                  + "highlight" + ES + str(page.number+1) + ES
-                                 + annot_i.annotation.info['id']  + ES + time_current + ES + '\n' )
+                                 + annot_i.annotation.info['id']  + ES + time_current + ES + annot_colour + ES + '\n' )
                 # n_rects = 0 means we process a pop-up note annotation, where there is no highlight text to be extracted, 
                 #             but only the existing content to be output
                 elif ( annot_i.n_rects == 0 ):
@@ -302,10 +305,12 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                         # If the first character is the equal sign "=" add an apostrophe to avoid Freeplane trying to detect this node as formula (start with equal sign)
                         if ( len(annot_content)>=1 and annot_content[0] == "=" ):
                             annot_content = "'" + annot_content
+                        # Extract the stroke colour of the annotation as string to export it using f.write
+                        annot_colour = get_annot_colour(annot_i.annotation)
                         # Output the note content to the output file
                         f.write( annot_content + ES
                                  + "note" + ES + str(page.number+1) + ES
-                                 + annot_i.annotation.info['id']  + ES + time_current + ES + '\n' )
+                                 + annot_i.annotation.info['id']  + ES + time_current + ES + annot_colour + ES + '\n' )
                 annot_counter += 1
             # For the h2a_freeplane output_mode, we need to output all annotation even ones that did not change in the pdf ot keep Freeplane up to date
             elif ( output_mode == 'h2a_freeplane' ):
@@ -324,9 +329,12 @@ def h2a_highlightedText_to_annotation ( input_file, output_mode='h2a', update_pr
                 else:
                     annot_type = "text"
 
+                # Extract the stroke colour of the annotation as string to export it using f.write
+                annot_colour = get_annot_colour(annot_i.annotation)
+                
                 f.write( annot_content + ES
                          + annot_type + ES + str(page.number+1) + ES
-                         + annot_i.annotation.info['id']  + ES + annot_time + ES + '\n' )
+                         + annot_i.annotation.info['id']  + ES + annot_time + ES + annot_colour + ES + '\n' )
             
     time_processing = time.process_time() - tic
     print("h2a_highlightedText_to_annotation<< ... finished processing the pages in "+str(round(time_processing,2))+".")
