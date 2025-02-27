@@ -75,6 +75,16 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
             #modTimePDF_freeplaneChanges = annot_modTimePDF
             #annot_modTimeFreeplane = line_split[5]
             
+            # Extract the annotation colour
+            # The annotation colour was added in h2aFreeplane-v2.1,
+            #  hence it is not always included in tmp_pathFile and its existence is check via "len(line_split)"
+            #  Moreover, its value can be empty if Freeplane does not provide a colour or uses the default colour, hence the "len(line_split[6])"-check
+            annot_colour = []
+            if ( len(line_split)>=6+2 and len(line_split[6])>0 ):
+                # The colour is output in groovy e.g. as '[1.,1.,0]', 
+                #  so we convert the string to a list using "eval" suitable for Python below
+                annot_colour = eval(line_split[6])
+            
             # Load the page where the annotation is located
             page = doc.load_page(annot_page)
 
@@ -98,6 +108,12 @@ def h2a_update_from_freeplane ( tmp_pathFile="./h2a_freeplane-changes.tmp" ):
                         if ( len(annot_content_fromFreeplane)<=0 ):
                             annot_content_fromFreeplane = ' '
                         annot.set_info( content=annot_content_fromFreeplane, modDate=annot_modTimePDF )
+                        # If the annot_colour is active, we apply it as stroke colour
+                        # @note We do not reset the annotation colour if Freeplane does not provide
+                        #  a colour or wants to reset it to default, because I don't know how to reset
+                        #  the pdf annotation to a/the default colour.
+                        if ( len(annot_colour)>0 ):
+                            annot.set_colors( stroke=annot_colour )
                         annot_counter += 1
 
     time_processing = time.process_time() - tic
