@@ -9,3 +9,6 @@ h2aFreeplane-V1
 /test pdfs with bugs/
 test*.pdf
 /Bup_pdfs/
+/pdfExtract - steps on the way to h2a/
+/test pdfs/
+/test-pdfs/
